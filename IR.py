@@ -50,9 +50,9 @@ def animation(grid, grid_size, p, vis):
         cbar = fig.colorbar(im, ax=ax)
 
     infected_list = []
-    nsteps = 1000
+    nsteps = 10000
 
-    for i in tqdm(range(nsteps)):
+    for i in range(nsteps):
 
         # move one step forward in the simulation, updating at every point.
         grid = update_grid(grid, grid_size, p)
@@ -60,7 +60,7 @@ def animation(grid, grid_size, p, vis):
         infected_list.append(np.sum(grid == 1)/grid_size**2)
 
         # every 50 sweeps update the animation.
-        if i % 50 == 0 and vis:
+        if i % 10 == 0 and vis:
             
             plt.cla()
             im = ax.imshow(grid, interpolation=None, animated=True, cmap="gray")
@@ -72,6 +72,27 @@ def animation(grid, grid_size, p, vis):
         plt.ylim(0, 1)
         plt.show()
 
+
+def taskb(grid, grid_size, p):
+
+    infected_list = []
+    nsteps = 200
+
+    for i in tqdm(range(nsteps)):
+
+        # move one step forward in the simulation, updating at every point.
+        grid = update_grid(grid, grid_size, p)
+
+        infected_list.append(np.sum(grid == 1)/grid_size**2)
+
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax1.plot(range(nsteps), infected_list)
+    ax1.set_title(f"fraction of alive cells over time for p = {p}")
+    ax1.set_ylabel("A/N")
+    ax1.set_xlabel("sweeps")
+    ax1.set_ylim(0, 1)
+    plt.show()
 
 
 def taskc():
@@ -255,28 +276,27 @@ def main():
     """Evaluate command line args to choose a function.
     """
 
-    try:
-        _, mode = sys.argv
-    except:
-        print("Usage IR.py <mode>")
-        sys.exit()
+
+    mode = sys.argv[1]
 
     grid_size = 50
 
-    if mode == "1":
-        p = float(input("p: "))
+    if mode == "vis":
+        p = float(sys.argv[2])
         grid = np.random.randint(2, size=(grid_size, grid_size))
         animation(grid, grid_size, p, True)
-    elif mode == "2":
-        p = float(input("p: "))
+    elif mode == "b":
+        p = float(sys.argv[2])
         grid = np.random.randint(2, size=(grid_size, grid_size))
-        animation(grid, grid_size, p, False)
-    elif mode == "3":
+        taskb(grid, grid_size, p)
+    elif mode == "c":
         taskc()
     elif mode == "4":
         taskd()
     elif mode == "5":
         taske()
+    else:
+        print("wrong args")
 
 
 main()
