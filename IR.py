@@ -100,7 +100,7 @@ def taskc():
     p_list = np.arange(0.55, 0.7, 0.005)
     grid_size = 50
 
-    nsteps = 500
+    nsteps = 1000
 
     average_infected_list = []
 
@@ -112,12 +112,17 @@ def taskc():
             grid = update_grid(grid, grid_size, p)
 
             if i > 100:
-                infected_list.append(np.sum(grid == 1)/grid_size**2)
+                total_infected = np.sum(grid == 1)
+                if total_infected != 0:
+                    infected_list.append(total_infected/grid_size**2)
+                else:
+                    infected_list += [0] * (nsteps - i)
+                    break
 
         average_infected_list.append(np.average(infected_list))
 
     plt.plot(p_list, average_infected_list)
-    plt.title(f"average survival in {nsteps} steps for p = {p}")
+    plt.title(f"average survival in {nsteps} steps versus p")
     plt.ylabel("average # infected / N")
     plt.xlabel("sweeps")
     plt.show()
@@ -259,26 +264,6 @@ def taske():
     plt.xscale("log")
     plt.yscale("log")
     plt.legend()
-    plt.show()
-    """Make a line plot of average infected vs immunity in the population.
-    """
-
-    p1, p2, p3 = [0.5, 0.5, 0.5]
-
-    data = np.genfromtxt(
-        f"SIRS_data/immunity_plot.{p1}.{p2}.{p3}.dat",
-        delimiter=",",
-        skip_header=1,
-        dtype=float,
-    )
-    percentages = np.array(data[:, 0])
-    data = np.array(data[:, 1])
-
-    # plot average infection as a function of proportion_immune immune.
-    fig, ax = plt.subplots()
-    ax.errorbar(percentages, data, fmt="x")
-    ax.set_xlabel("Proportion immune")
-    ax.set_ylabel("Average proportion infected over 1000 iterations")
     plt.show()
 
 
