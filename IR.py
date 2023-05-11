@@ -100,7 +100,7 @@ def taskc():
     p_list = np.arange(0.55, 0.7, 0.005)
     grid_size = 50
 
-    nsteps = 100
+    nsteps = 500
 
     average_infected_list = []
 
@@ -111,13 +111,16 @@ def taskc():
         for i in range(nsteps):
             grid = update_grid(grid, grid_size, p)
 
-            infected_list.append(np.sum(grid == 1)/grid_size**2)
+            if i > 100:
+                infected_list.append(np.sum(grid == 1)/grid_size**2)
 
         average_infected_list.append(np.average(infected_list))
 
     plt.plot(p_list, average_infected_list)
+    plt.title(f"average survival in {nsteps} steps for p = {p}")
+    plt.ylabel("average # infected / N")
+    plt.xlabel("sweeps")
     plt.show()
-
 
 
 def get_jacknife_error(data, interesting_quantity_func):
