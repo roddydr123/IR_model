@@ -188,7 +188,7 @@ def taskd():
     p_list = np.arange(0.55, 0.7, 0.005)
     grid_size = 50
 
-    nsteps = 2000
+    nsteps = 1000
 
     variance_list = []
     errors = []
@@ -200,7 +200,7 @@ def taskd():
         for i in range(nsteps):
             grid = update_grid(grid, grid_size, p)
 
-            if i > 100:
+            if i > 500:
                 total_infected = np.sum(grid == 1)
                 if total_infected != 0:
                     infected_list.append(total_infected)
@@ -224,12 +224,13 @@ def taske():
     p_list = [0.6, 0.625, 0.65]
     grid_size = 50
     nsteps = 300
-    repeats = 100
+    repeats = 200
 
     overall_infected_over_time = []
 
     for p in p_list:
 
+        ijs = np.random.randint(grid_size, size=(repeats, 2))
         p_survival = []
 
         # repeat with each p a few times.
@@ -237,7 +238,7 @@ def taske():
 
             # set a random cell to one.
             grid = np.zeros((grid_size, grid_size))
-            i, j = np.random.randint(grid_size, size=(2,))
+            i, j = ijs[repeat]
             grid[i,j] = 1
 
             infected_over_time = []
@@ -250,19 +251,27 @@ def taske():
 
                 # stop the experiment if all cells die.
                 if infected > 0:
-                    infected_over_time.append(infected)
+                    infected_over_time.append(1)
                 else:
                     infected_over_time += [0] * (nsteps - n)
                     break
 
             p_survival.append(infected_over_time)
 
-        overall_infected_over_time.append(np.average(p_survival, axis=0))
+        overall_infected_over_time.append(np.sum(p_survival, axis=0))
 
     for ydata, prob in zip(overall_infected_over_time, p_list):
-        plt.plot(range(nsteps), ydata, label=prob)
-    plt.xscale("log")
-    plt.yscale("log")
+        np.savetxt(f"{prob}inf1.txt", ydata)
+
+
+def analyse_taske():
+    p_list = [0.6, 0.625, 0.65]
+    nsteps = 300
+    for prob in p_list:
+        ydata = np.loadtxt(f"{prob}inf1.txt")
+        plt.plot(np.log10(range(nsteps)), np.log10(ydata), label=prob)
+    plt.xlabel("log10(sweeps)")
+    plt.ylabel("log10(number of simulations with surviving cells)")
     plt.legend()
     plt.show()
 
@@ -290,6 +299,8 @@ def main():
         taskd()
     elif mode == "e":
         taske()
+    elif mode == "ae":
+        analyse_taske()
     else:
         print("wrong args")
 
