@@ -183,9 +183,8 @@ def taskd():
     p_list = np.arange(0.55, 0.7, 0.005)
     grid_size = 50
 
-    nsteps = 1000
+    nsteps = 2000
 
-    average_infected_list = []
     variance_list = []
     errors = []
 
@@ -196,13 +195,21 @@ def taskd():
         for i in range(nsteps):
             grid = update_grid(grid, grid_size, p)
 
-            infected_list.append(np.sum(grid == 1))
+            if i > 100:
+                total_infected = np.sum(grid == 1)
+                if total_infected != 0:
+                    infected_list.append(total_infected)
+                else:
+                    infected_list += [0] * (nsteps - i)
+                    break
 
-        average_infected_list.append(np.average(infected_list))
         variance_list.append(np.var(infected_list) / grid_size**2)
-        errors.append(get_bootstrap_error(infected_list, np.var) / grid_size**2)
+        errors.append(get_jacknife_error(infected_list, np.var) / grid_size**2)
 
     plt.errorbar(p_list, variance_list, yerr=errors)
+    plt.title(f"variance versus probability")
+    plt.ylabel("variance")
+    plt.xlabel("p")
     plt.show()
 
 
@@ -294,9 +301,9 @@ def main():
         taskb(grid, grid_size, p)
     elif mode == "c":
         taskc()
-    elif mode == "4":
+    elif mode == "d":
         taskd()
-    elif mode == "5":
+    elif mode == "e":
         taske()
     else:
         print("wrong args")
