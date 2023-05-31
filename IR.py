@@ -46,8 +46,8 @@ def animation(grid, grid_size, p, vis):
     # if we wanted a visualisation, make a figure for it.
     if vis:
         fig, ax = plt.subplots()
-        im = ax.imshow(grid, animated=True)
-        cbar = fig.colorbar(im, ax=ax)
+        im = ax.imshow(grid, animated=True, cmap="gray")
+        # cbar = fig.colorbar(im, ax=ax)
 
     infected_list = []
     nsteps = 10000
