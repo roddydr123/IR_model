@@ -1,6 +1,6 @@
 # Simple infection model
 
-## Infection model laid out on a grid of cells. Cells can only have one of two states: infected or healthy. This problem was found in a past paper for the Modelling and Visualisation in Physics course (paper.pdf). The dynamics of the system were studied to find how the system behaved as the probabilities of cell death (p) and neighbour infection (1-p) were varied.
+### Infection model laid out on a grid of cells. Cells can only have one of two states: infected or healthy. This problem was found in a past paper for the Modelling and Visualisation in Physics course (paper.pdf). The dynamics of the system were studied to find how the system behaved as the probabilities of cell death (p) and neighbour infection (1-p) were varied.
 
 ![Log plot of survival versus number of sweeps/updates in simulation.](results/log_survival.png)
 
