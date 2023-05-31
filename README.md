@@ -8,3 +8,5 @@ This is a log plot of survival versus number of sweeps/updates in simulation for
 
 * IR.py contains the project code.
 * results/ contains generated data and plots studying the system dynamics.
+
+Run `python IR.py vis <p>` to view an animation of the simulation.
